@@ -35,8 +35,8 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-          
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -57,5 +57,6 @@ class Kernel extends HttpKernel
 
         // Tambahan: Middleware Mahasiswa
         'mahasiswa' => \App\Http\Middleware\MahasiswaMiddleware::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class
     ];
 }

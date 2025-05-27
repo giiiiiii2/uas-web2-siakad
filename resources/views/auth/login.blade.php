@@ -12,14 +12,12 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email -->
         <div>
             <x-input-label for="email" :value="'Email'" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="'Password'" />
             <x-text-input id="password" class="block mt-1 w-full"
@@ -29,7 +27,6 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Role -->
         <div class="mt-4">
             <x-input-label for="role" :value="'Peran'" />
             <select id="role" name="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
@@ -41,7 +38,6 @@
         </div>
 
 
-        <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">

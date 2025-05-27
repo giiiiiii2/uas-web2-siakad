@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash; 
 
 class AuthenticatedSessionController extends Controller
 {
@@ -36,16 +37,17 @@ class AuthenticatedSessionController extends Controller
         // Ambil user berdasarkan email
         $user = User::where('email', $credentials['email'])->first();
 
-        if (!$user || !\Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password)) {
+        // Cek apakah user ada dan password cocok
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             throw ValidationException::withMessages([
                 'email' => __('Email atau password salah.'),
             ]);
         }
 
-        // Cek apakah role sesuai
+        // Cek apakah role yang dipilih sesuai dengan role user di database
         if ($user->role !== $role) {
             throw ValidationException::withMessages([
-                'role' => __('Peran tidak sesuai.'),
+                'role' => __('Peran tidak sesuai dengan akun yang terdaftar.'),
             ]);
         }
 
@@ -56,12 +58,18 @@ class AuthenticatedSessionController extends Controller
 
         // Redirect sesuai role
         if ($user->role === 'mahasiswa') {
-            return redirect()->intended('/dashboard-mahasiswa');
+            return redirect()->intended('/mahasiswa/dashboard'); // Ini sudah benar
         } elseif ($user->role === 'dosen') {
-            return redirect()->intended('/dashboard-dosen');
+            return redirect()->intended('/dashboard-dosen'); // Ini sudah benar
+        } elseif ($user->role === 'admin') {
+            return redirect()->intended('/admin/dashboard'); // Pastikan ini mengarah ke rute admin yang benar
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // Fallback jika tidak ada role yang cocok
+        // Anda bisa memilih untuk mengarahkan ke halaman login lagi atau halaman default lainnya
+        // atau jika Anda yakin semua role akan ditangani di atas, baris ini bisa dipertimbangkan untuk dihapus
+        // atau diarahkan ke '/'
+        return redirect()->intended('/'); // Ubah ini dari RouteServiceProvider::HOME atau /dashboard jika bermasalah
     }
 
     /**
