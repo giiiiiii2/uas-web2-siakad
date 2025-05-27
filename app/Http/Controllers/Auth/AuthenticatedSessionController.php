@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -56,20 +56,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Redirect sesuai role
+        // Redirect secara eksplisit sesuai role
         if ($user->role === 'mahasiswa') {
-            return redirect()->intended('/mahasiswa/dashboard'); // Ini sudah benar
+            return redirect('/mahasiswa/dashboard'); // Ubah dari intended() ke direct redirect
         } elseif ($user->role === 'dosen') {
-            return redirect()->intended('/dashboard-dosen'); // Ini sudah benar
+            return redirect('/dashboard-dosen'); // Ubah dari intended() ke direct redirect
         } elseif ($user->role === 'admin') {
-            return redirect()->intended('/admin/dashboard'); // Pastikan ini mengarah ke rute admin yang benar
+            return redirect('/admin/dashboard'); // Ubah dari intended() ke direct redirect
         }
 
-        // Fallback jika tidak ada role yang cocok
-        // Anda bisa memilih untuk mengarahkan ke halaman login lagi atau halaman default lainnya
-        // atau jika Anda yakin semua role akan ditangani di atas, baris ini bisa dipertimbangkan untuk dihapus
-        // atau diarahkan ke '/'
-        return redirect()->intended('/'); // Ubah ini dari RouteServiceProvider::HOME atau /dashboard jika bermasalah
+        // Fallback jika tidak ada role yang cocok (seharusnya tidak terjadi jika validasi role sudah ketat)
+        return redirect('/'); // Tetap redirect ke halaman utama jika tidak ada role yang cocok
     }
 
     /**
@@ -83,6 +80,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login'); // Pastikan ini mengarahkan ke halaman login setelah logout
     }
 }

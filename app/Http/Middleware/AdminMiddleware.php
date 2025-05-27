@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response; // Tambahkan ini
 
 class AdminMiddleware
 {
@@ -14,13 +14,13 @@ class AdminMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): Response // Tambahkan : Response
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        if (Auth::check() && Auth::user()->role === 'admin') { // Pastikan Auth::check() ada di sini
             return $next($request);
         }
 
-        // Redirect ke halaman login atau tampilkan error 403
-        abort(403, 'Akses khusus untuk admin.');
+        // Jika tidak admin atau tidak login, redirect ke halaman login atau tampilkan error
+        return redirect('/login')->withErrors(['role' => 'Akses khusus untuk admin.']); // Redirect ke login dengan pesan
     }
 }
